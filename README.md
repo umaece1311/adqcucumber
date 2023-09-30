@@ -63,3 +63,58 @@ After that, `yarn test:test` or `yarn test:local` etc. should work and open up t
 
 ! This is in addition to already having added localhost in your etc/hosts file:
 127.0.0.1 localhost
+
+version: 2.1
+
+orbs:
+  cypress: cypress-io/cypress@1.29.0
+
+executors:
+  with-chrome-and-firefox:
+    docker:
+      - image: "cypress/browsers:node16.14.0-chrome99-ff97"
+    resource_class: large
+
+filter-master: &filter-master
+  branches:
+    only:
+      - master
+
+cypressparameters: &cypressParameters
+  filters: *filter-master
+  yarn: true
+  executor: with-chrome-and-firefox
+  browser: chrome
+  pre-steps:
+    - checkout
+    - run: echo export CYPRESS_APP_ENV=production >> $BASH_ENV
+    - run: yarn clean:reports
+  post-checkout:
+    - run: yarn update-credentials
+  post-steps:
+    - run:
+        when: always
+        name: Generate and merge mochawesome reports
+        command: yarn send-reports-ci
+    - store_test_results:
+        path: cypress/reports/mochareports
+    - store_artifacts:
+        path: cypress/reports/mochareports
+    - store_artifacts:
+        path: cypress/screenshots
+    - store_artifacts:
+        path: cypress/videos
+    - run:
+        when: always
+        name: Send notification to slack channel
+        command: yarn notify-slack
+ platform1:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "platform1"
+          spec: cypress/e2e/team-impact/*,cypress/e2e/security/*
+    triggers:
+      - schedule:
+          cron: "0 20 * * *"
+          filters: *filter-master
