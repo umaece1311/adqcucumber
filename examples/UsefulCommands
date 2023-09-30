@@ -1,0 +1,33 @@
+//cy.get('tr').contains('Application Portfolio Workspace').children('FlywheelTable__Td-epUpbW').should('contain','QA+Writer')
+//cy.get('tr>td>div').eq(2).contains('QA+Writer')
+
+//cy.contains('td', 'QA+Writer') // gives you the cell
+    /*.siblings()
+    .contains('Application Portfolio Workspace')
+    .click()
+  })*/
+    /*  .parent() // gives you the row
+      .within($tr => { // filters just that row
+        cy.get('[data-click-id=asset-manager-name-click]').should('contain','Application Portfolio Workspace') // finds the buttons cell of that row
+          .click()
+      })*/
+    //cy.get('tbody>tr').contains('td','QA+Writer').first().click()
+    //cy.contains('td','QA+Writer').parent('tr').first().click()
+    //cy.get('#appContentContainer > .sc-fzXfMB.ccpTSg > .sc-fzXfME.kLLuXD > div > div > .sc-fzXfLU.cabPLK > .FlywheelTable__ScrollableBody-jyRdhX.jdmxaJ > table > tbody>tr>td').eq(0).contains('QA Writer')
+    //#appContentContainer > div.sc-fzXfMB.ccpTSg > div.sc-fzXfME.kLLuXD > div > div > div.sc-fzXfLU.cabPLK > div.FlywheelTable__ScrollableBody-jyRdhX.jdmxaJ > table > tbody > tr:nth-child(20) > td:nth-child(3) > div
+    //cy.get('#appContentContainer > .sc-fzXfMB.ccpTSg > .sc-fzXfME.kLLuXD > div > div > .sc-fzXfLU.cabPLK > .FlywheelTable__ScrollableBody-jyRdhX.jdmxaJ > table > tbody > tr:nth-child(18) > td:nth-child(1) > div > div > div').click()
+  })
+  /*it('Verification of Surveys', () => {
+
+  })*/
+})
+
+
+
+//  cy.get('[data-click-id="filter-workspaces-chip"]').click()   //Click on Workspace icon on Home page
+  //cy.get(':nth-child(2) > .atoms__SortWrapper-fTsjNL').click().click()  //Last Modified
+
+
+
+//Demo to generate report and headed browser
+"scripts": "cypress run --headed --browser chrome --spec 'cypress/integration/Workspaces.js'",

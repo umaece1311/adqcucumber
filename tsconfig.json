@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": ["es2015", "dom"],
+    "allowJs": true,
+    "noEmit": true,
+    "types": [
+      "cypress","cy-verify-downloads"
+    ],
+    
+  },
+  "tsNodeDefinition": {
+    "properties": {
+      "ts-node": {
+        "transpileOnly": true
+      }
+    }
+  },
+
+  "include": [
+    "cypress/**/*.js"
+  ]
+}

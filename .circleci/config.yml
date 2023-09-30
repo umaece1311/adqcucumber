@@ -1,0 +1,147 @@
+version: 2.1
+
+orbs:
+  cypress: cypress-io/cypress@1.29.0
+
+executors:
+  with-chrome-and-firefox:
+    docker:
+      - image: "cypress/browsers:node16.14.0-chrome99-ff97"
+    resource_class: large
+
+filter-master: &filter-master
+  branches:
+    only:
+      - master
+
+cypressparameters: &cypressParameters
+  filters: *filter-master
+  yarn: true
+  executor: with-chrome-and-firefox
+  browser: chrome
+  pre-steps:
+    - checkout
+    - run: echo export CYPRESS_APP_ENV=production >> $BASH_ENV
+    - run: yarn clean:reports
+  post-checkout:
+    - run: yarn update-credentials
+  post-steps:
+    - run:
+        when: always
+        name: Generate and merge mochawesome reports
+        command: yarn send-reports-ci
+    - store_test_results:
+        path: cypress/reports/mochareports
+    - store_artifacts:
+        path: cypress/reports/mochareports
+    - store_artifacts:
+        path: cypress/screenshots
+    - store_artifacts:
+        path: cypress/videos
+    - run:
+        when: always
+        name: Send notification to slack channel
+        command: yarn notify-slack
+
+workflows:
+  build1:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          filters: *filter-master
+          command: yarn test:prod
+  build2:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          filters: *filter-master
+          command: yarn test:pf
+  platform1:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "platform1"
+          spec: cypress/e2e/team-impact/*,cypress/e2e/security/*
+    triggers:
+      - schedule:
+          cron: "0 20 * * *"
+          filters: *filter-master
+  platform2:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "platform2"
+          command: yarn test:pf
+#      - cypress/run:
+#          <<: *cypressParameters
+#          name: "platform2"
+#          command: yarn test:plat3
+    triggers:
+      - schedule:
+          cron: "0 21 * * *"
+          filters: *filter-master
+  integration:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "integration"
+          spec: cypress/e2e/team-integration/*
+    triggers:
+      - schedule:
+          cron: "0 22 * * *"
+          filters: *filter-master
+  engagement:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "engagement"
+          spec: cypress/e2e/team-engagement/*
+    triggers:
+      - schedule:
+          cron: "0 23 * * *"
+          filters: *filter-master
+
+  uaeenv:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "uaeenv"
+          command: yarn test:newEnv
+          spec: cypress/e2e/team-impact/*
+    triggers:
+      - schedule:
+          cron: "0 23 * * *"
+          filters: *filter-master
+
+  insight:
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "insight"
+          spec: cypress/e2e/team-insight/*
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters: *filter-master
+  coresmoke:     
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "Core_Smoke"
+          command: yarn core:smoke
+    triggers:
+      - schedule:
+          cron: "0 1 * * *"
+          filters: *filter-master
+
+  core_regression:     
+    jobs:
+      - cypress/run:
+          <<: *cypressParameters
+          name: "Core_Regression"
+          command: yarn core:regression
+    triggers:
+      - schedule:
+          cron: "0 2 * * *"
+          filters: *filter-master
+          

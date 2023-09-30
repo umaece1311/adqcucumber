@@ -1,0 +1,13 @@
+/node_modules
+.DS_Store
+cypress/reports
+cypress/results
+cypress/snapshots
+cypress/screenshots
+cypress/videos
+cypress/fixtures/credentials.json
+cypress/cucumber_report
+cucumber-report/
+mochawesome-report
+cypress/fixtures/example.json
+cypress.env.json

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/cypress/reports" />
+      <excludeFolder url="file://$MODULE_DIR$/cypress/screenshots" />
+      <excludeFolder url="file://$MODULE_DIR$/cypress/videos" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@types/cypress-axe" level="application" />
+    <orderEntry type="library" name="@types/cypress-cucumber-preprocessor" level="application" />
+    <orderEntry type="library" name="@types/cypress-image-snapshot" level="application" />
+  </component>
+</module>
